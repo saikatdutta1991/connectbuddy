@@ -1,6 +1,8 @@
-var createError = require('http-errors')
-var express = require('express') //express module
-var path = require('path')
+const createError = require('http-errors')
+const express = require('express') //express module
+const path = require('path')
+const bodyParser = require("body-parser") //express body parser module
+const db = require('./helpers/Database') //database connection setup
 
 
 /** creating express app */
@@ -23,6 +25,11 @@ app.use(function (req, res, next) {
 });
 /** cross domain api call end*/
 
+/** setup body parsers */
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+/** setup body parsers end*/
+
 
 /** enable access to public folder through browser */
 app.use(express.static(path.join(__dirname, 'public')));
@@ -30,7 +37,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /** registering routes */
 var indexRouter = require('./routes/index');
+const userRouter = require('./routes/user');
 app.use('/', indexRouter);
+app.use('/api/v1/user', userRouter);
 /** registering routes end*/
 
 /** catch 404 and forward to error handler */
