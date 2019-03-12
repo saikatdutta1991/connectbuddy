@@ -3,6 +3,7 @@ const express = require('express') //express module
 const path = require('path')
 const bodyParser = require("body-parser") //express body parser module
 const db = require('./helpers/Database') //database connection setup
+const expressValidator = require('express-validator'); //express validation request
 
 
 /** creating express app */
@@ -29,6 +30,10 @@ app.use(function (req, res, next) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 /** setup body parsers end*/
+
+
+/** register express validator */
+app.use(expressValidator());
 
 
 /** enable access to public folder through browser */

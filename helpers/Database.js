@@ -31,9 +31,9 @@ class Database {
         console.log('Connecting to database..');
 
         mongoose.connect(this._getConnectionString(), { useNewUrlParser: true }).then(() => {
-            console.log('Database conncted')
+            console.log('Database connected')
         }).catch(err => {
-            console.error('Database conntection failed')
+            console.error(`Database conntection failed. Reason: ${err.message}`)
         })
     }
 }

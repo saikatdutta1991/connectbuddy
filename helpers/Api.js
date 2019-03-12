@@ -15,3 +15,19 @@ exports.createResponse = function (success, type, message, data, stackTrace) {
         stack: stackTrace
     };
 }
+
+/** format express validation errors */
+exports.formatErrorExpress = function ({ location, msg, param, value, nestedErrors }) {
+    return msg
+}
+
+
+
+exports.catchAsyncErrors = function (fn) {
+    return (req, res, next) => {
+        const routePromise = fn(req, res, next);
+        if (routePromise.catch) {
+            routePromise.catch(err => next(err));
+        }
+    }
+}
