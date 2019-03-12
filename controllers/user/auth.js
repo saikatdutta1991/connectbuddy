@@ -1,8 +1,35 @@
 
-const { userRegistration } = require('../../validators/Auth');
+const { userRegistration, userLogin } = require('../../validators/Auth');
 const { createResponse, formatErrorExpress } = require('../../helpers/Api');
 const User = require('../../models/User');
-const bcrypt = require('bcryptjs');
+
+
+
+
+/**
+ * login user 
+ */
+exports.doLogin = async (req, res, next) => {
+
+    let data = {};
+
+    /** validate user request params */
+    let errors = await userLogin(req, data);
+
+    if (!errors.isEmpty()) {
+        return res.json(createResponse(false, 'v_error', 'Some input fields are not valid', errors.formatWith(formatErrorExpress).mapped()));
+    }
+
+    let response = createResponse(true, 'loggedin', 'You have registered successfully', {
+        user: data.user,
+        authToken: data.user.getJwtToken()
+    });
+
+    return res.json(response);
+}
+
+
+
 
 /**
  * register user 
@@ -21,7 +48,7 @@ exports.doRegister = async (req, res, next) => {
     let user = new User({
         name: req.body.name,
         email: req.body.email,
-        password: bcrypt.hashSync(req.body.password, 10),
+        password: User.encryptPassword(req.body.password),
         location: {
             coordinates: [req.body.latitude, req.body.longitude]
         }

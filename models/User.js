@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const PointSchema = require('./PointSchema');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 var userSchema = new Schema({
     name: {
@@ -26,6 +27,22 @@ var userSchema = new Schema({
         required: [true, 'Password is required']
     },
 });
+
+
+
+/** verify password */
+userSchema.methods.verifyPassword = function (password) {
+    return bcrypt.compareSync(password, this.password)
+}
+
+
+
+/** encrypt password string to password hash */
+userSchema.statics.encryptPassword = password => {
+    return bcrypt.hashSync(password, 10);
+}
+
+
 
 
 /** get jwt token */
