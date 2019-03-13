@@ -11,5 +11,6 @@ router.post('/login', catchAsyncErrors(AuthController.doLogin));
 /** authenticated routes */
 router.use('/', catchAsyncErrors(AuthenticateUserMiddleware));
 router.get('/profile', catchAsyncErrors(ProfileController.getProfile));
+router.patch('/profile', catchAsyncErrors(ProfileController.editProfile));
 
 module.exports = router;
