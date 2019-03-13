@@ -12,7 +12,9 @@ var userSchema = new Schema({
     },
     location: {
         type: PointSchema,
-        required: true
+        default: {
+            coordinates: [0.0000000, 0.0000000]
+        }
     },
     email: {
         type: String,

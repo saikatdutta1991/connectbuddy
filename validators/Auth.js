@@ -59,10 +59,5 @@ module.exports.userRegistration = async function (req) {
     })
 
 
-    /** check coordinates */
-    req.checkBody('latitude').exists().not().isEmpty().not().isString().withMessage('Location is missing');
-    req.checkBody('longitude').exists().not().isEmpty().not().isString().withMessage('Location is missing');
-
-
     return req.getValidationResult()
 }

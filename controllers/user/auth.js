@@ -48,10 +48,7 @@ exports.doRegister = async (req, res, next) => {
     let user = new User({
         name: req.body.name,
         email: req.body.email,
-        password: User.encryptPassword(req.body.password),
-        location: {
-            coordinates: [req.body.latitude, req.body.longitude]
-        }
+        password: User.encryptPassword(req.body.password)
     });
 
     user = await user.save()
