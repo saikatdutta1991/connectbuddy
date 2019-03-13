@@ -12,5 +12,6 @@ router.post('/login', catchAsyncErrors(AuthController.doLogin));
 router.use('/', catchAsyncErrors(AuthenticateUserMiddleware));
 router.get('/profile', catchAsyncErrors(ProfileController.getProfile));
 router.patch('/profile', catchAsyncErrors(ProfileController.editProfile));
+router.get('/nearby', catchAsyncErrors(ProfileController.getNearbyUsers));
 
 module.exports = router;

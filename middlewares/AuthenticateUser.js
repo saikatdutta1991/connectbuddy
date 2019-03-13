@@ -18,6 +18,10 @@ module.exports = async (req, res, next) => {
     /** fetch user */
     let user = await User.findOne({ _id: decoded.data._id });
 
+    if (!user) {
+        throw new ApplicationError('session_expired', 'Session expired');
+    }
+
     /** add user to request auth_user property */
     req.auth_user = user;
 

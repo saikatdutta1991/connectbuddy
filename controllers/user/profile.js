@@ -4,6 +4,30 @@ const User = require('../../models/User');
 
 
 /**
+ * get nearby users by latitude and longitude
+ */
+module.exports.getNearbyUsers = async (req, res, next) => {
+
+    let users = await User.aggregate([
+        {
+            $geoNear: {
+                near: { type: "Point", coordinates: [parseFloat(req.query.longitude), parseFloat(req.query.latitude)] },
+                distanceField: "calculated_distance_km",
+                distanceMultiplier: 0.001,
+                maxDistance: parseFloat(req.query.distance),
+                spherical: true
+            }
+        }
+    ]).match({ _id: { $ne: req.auth_user._id } });
+
+    res.json(createResponse(true, 'nearby_users', 'Nearby users', users))
+}
+
+
+
+
+
+/**
  * update profile
  */
 module.exports.editProfile = async (req, res, next) => {
