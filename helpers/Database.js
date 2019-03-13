@@ -35,6 +35,7 @@ class Database {
         }).catch(err => {
             console.error(`Database conntection failed. Reason: ${err.message}`)
         })
+        mongoose.set('useCreateIndex', true);
     }
 }
 

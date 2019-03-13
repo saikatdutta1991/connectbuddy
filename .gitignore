@@ -82,3 +82,7 @@ typings/
 
 package-lock.json
 node_modules
+public/uploads
+docker-compose.yml
+Dockerfile
+.openode

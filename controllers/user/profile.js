@@ -36,9 +36,17 @@ module.exports.editProfile = async (req, res, next) => {
         }
     }
 
+
+    let file = await User.uploadImage(req, res).catch(err => { })
+    if (file) {
+        updateObject.image_path = file.path;
+    }
+
     /** update user data */
     await User.updateOne({ _id: req.auth_user._id }, updateObject);
     let updatedUser = await User.findOne({ _id: req.auth_user._id });
+
+
 
 
     res.json(createResponse(true, 'profile', 'You profile updated', {

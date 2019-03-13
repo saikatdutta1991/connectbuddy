@@ -3,6 +3,9 @@ const Schema = mongoose.Schema;
 const PointSchema = require('./PointSchema');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const multer = require('multer');
+const path = require('path');
+const ApplicationError = require('../helpers/ApplicationError');
 
 var userSchema = new Schema({
     name: {
@@ -28,8 +31,18 @@ var userSchema = new Schema({
         type: String,
         required: [true, 'Password is required']
     },
+
+    image_path: {
+        type: String,
+        default: ''
+    }
+
 });
 
+
+userSchema.set('toObject', { virtuals: true });
+userSchema.set('toJSON', { virtuals: true });
+userSchema.index({ location: '2dsphere' });
 
 
 /** verify password */
@@ -62,9 +75,55 @@ userSchema.methods.getJwtToken = function () {
 userSchema.methods.toJSON = function () {
     var obj = this.toObject();
     delete obj.password;
+    delete obj.image_path;
     return obj;
 }
 
+
+
+/** 
+ * image destination and file name generation
+ */
+userSchema.statics.imageStorage = multer({
+    storage: multer.diskStorage({
+        destination: 'public/uploads/users/images',
+        filename: (req, file, cb) => {
+            var filename = `${file.fieldname}_${Date.now()}_${path.extname(file.originalname)}`
+            cb(null, filename)
+        }
+    })
+}).single('image');
+
+
+
+/**
+ * upload file promise
+ */
+userSchema.statics.uploadImage = (req, res) => {
+    return new Promise((resolve, reject) => {
+        User.imageStorage(req, res, (err) => {
+            if (err) {
+                return reject(err)
+            }
+
+            if (!req.file) {
+                reject(new ApplicationError('file_missing', 'Image file missing'));
+            }
+
+            resolve(req.file)
+        })
+    });
+}
+
+
+
+/** generating image url */
+userSchema.virtual('image_url').get(function () {
+    if (!this.image_path) {
+        return process.env.DEFAULT_USER_IMAGE_URL;
+    }
+    return `${process.env.BASE_URL}/${this.image_path.replace('public/', '')}`
+})
 
 
 const User = mongoose.model('User', userSchema);
