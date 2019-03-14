@@ -6,6 +6,28 @@ const socketIO = require('../../socketio/SocketIO');
 
 
 
+
+/**
+ * get friend requests
+ */
+module.exports.getFriendRequests = async (req, res) => {
+
+    let freindRequests = await FriendRequest
+        .find({
+            $or: [{ from_user: req.auth_user._id }, { to_user: req.auth_user.id }]
+        })
+        .populate('from_user')
+        .populate('to_user')
+        .sort({ createdAt: -1 });
+
+    res.json(createResponse(true, 'requests', 'Requests fetched', freindRequests))
+
+}
+
+
+
+
+
 /**
  * reject friend request
  */

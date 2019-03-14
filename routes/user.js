@@ -15,6 +15,7 @@ router.get('/profile', catchAsyncErrors(ProfileController.getProfile));
 router.patch('/profile', catchAsyncErrors(ProfileController.editProfile));
 router.get('/nearby', catchAsyncErrors(ProfileController.getNearbyUsers));
 router.post('/requests/send', catchAsyncErrors(RequestController.sendFriendRequest));
+router.get('/requests', catchAsyncErrors(RequestController.getFriendRequests));
 router.post('/requests/cancel', catchAsyncErrors(RequestController.cancelFriendRequest));
 router.post('/requests/reject', catchAsyncErrors(RequestController.rejectFriendRequest));
 

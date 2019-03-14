@@ -2,13 +2,15 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 var friendRequestSchema = new Schema({
-    from_user: Schema.Types.ObjectId,
-    to_user: Schema.Types.ObjectId,
+    from_user: { type: Schema.Types.ObjectId, ref: 'User' },
+    to_user: { type: Schema.Types.ObjectId, ref: 'User' },
     status: {
         type: String,
         default: ''
     }
-});
+}, {
+        timestamps: { createdAt: true, updatedAt: false }
+    });
 
 /** static status types */
 friendRequestSchema.statics.REQUESTED = 'requested';
