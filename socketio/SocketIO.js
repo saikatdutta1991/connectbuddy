@@ -12,6 +12,10 @@ io.on('connection', socket => {
 
 
 
+    socket.on('disconnect', () => {
+        console.log('user leave room : ' + socketRoom)
+    })
+
 });
 
 
