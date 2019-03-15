@@ -18,5 +18,7 @@ router.post('/requests/send', catchAsyncErrors(RequestController.sendFriendReque
 router.get('/requests', catchAsyncErrors(RequestController.getFriendRequests));
 router.post('/requests/cancel', catchAsyncErrors(RequestController.cancelFriendRequest));
 router.post('/requests/reject', catchAsyncErrors(RequestController.rejectFriendRequest));
+router.post('/requests/accept', catchAsyncErrors(RequestController.acceptFriendRequest));
+router.get('/friends', catchAsyncErrors(RequestController.getFriends));
 
 module.exports = router;

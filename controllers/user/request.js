@@ -8,6 +8,56 @@ const socketIO = require('../../socketio/SocketIO');
 
 
 /**
+ * get friends list
+ */
+module.exports.getFriends = async (req, res) => {
+
+    let user = await User.findOne({ _id: req.auth_user._id })
+        .populate('friends', '_id, name, email');
+
+    res.json(createResponse(true, 'requests', 'Requests fetched', { friends: user.friends }))
+
+}
+
+
+
+
+/**
+ * accept friend request
+ */
+module.exports.acceptFriendRequest = async (req, res) => {
+
+    let data = {};
+
+    /** validate user request */
+    let errors = await rejectRequestValidator(req, data);
+
+    if (!errors.isEmpty()) {
+        return res.json(createResponse(false, 'v_error', 'Some input fields are not valid', errors.formatWith(formatErrorExpress).mapped()));
+    }
+
+
+    /** change friendRequest status to accepted */
+    await FriendRequest.updateOne({ _id: data.friendRequest._id }, { status: FriendRequest.ACCEPTED })
+    await User.updateOne({ _id: req.auth_user._id }, { $push: { friends: req.body.userid } });
+    await User.updateOne({ _id: req.body.userid }, { $push: { friends: req.auth_user.id } });
+
+
+    /** send event to other user that new friend request canceled */
+    socketIO.sockets.in(`user_${req.body.userid}`).emit('friend_request_accepted', {
+        fromUser: req.auth_user
+    });
+
+
+    let response = createResponse(true, 'friend_request_accepted', 'Friend request accepted successfully');
+    return res.json(response);
+
+}
+
+
+
+
+/**
  * get friend requests
  */
 module.exports.getFriendRequests = async (req, res) => {
@@ -16,8 +66,8 @@ module.exports.getFriendRequests = async (req, res) => {
         .find({
             $or: [{ from_user: req.auth_user._id }, { to_user: req.auth_user.id }]
         })
-        .populate('from_user')
-        .populate('to_user')
+        .populate('from_user', '_id name')
+        .populate('to_user', '_id name')
         .sort({ createdAt: -1 });
 
     res.json(createResponse(true, 'requests', 'Requests fetched', freindRequests))

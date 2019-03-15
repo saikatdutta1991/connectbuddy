@@ -35,7 +35,8 @@ var userSchema = new Schema({
     image_path: {
         type: String,
         default: ''
-    }
+    },
+    friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 
 });
 
