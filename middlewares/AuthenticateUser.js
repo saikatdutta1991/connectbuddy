@@ -10,16 +10,19 @@ const ApplicationError = require('../helpers/ApplicationError');
 
 module.exports = async (req, res, next) => {
 
-    /** decode token */
-    let decoded = await JWT.verify(req.headers.authorization, process.env.JWT_SECRET).catch(err => {
-        throw new ApplicationError('session_expired', 'Session expired');
-    })
+    let decoded, user, error;
 
-    /** fetch user */
-    let user = await User.findOne({ _id: decoded.data._id });
+    /** decode token & fetch user */
+
+    try {
+        decoded = await JWT.verify(req.headers.authorization, process.env.JWT_SECRET);
+        user = await User.findOne({ _id: decoded.data._id });
+    } catch (err) {
+        error = err;
+    }
 
     if (!user) {
-        throw new ApplicationError('session_expired', 'Session expired');
+        return res.send(createResponse(false, 'session_expired', 'Session expired'));
     }
 
     /** add user to request auth_user property */
