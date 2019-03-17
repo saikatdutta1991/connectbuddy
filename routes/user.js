@@ -10,7 +10,7 @@ router.post('/login', catchAsyncErrors(AuthController.doLogin));
 
 
 /** authenticated routes */
-router.use('/', catchAsyncErrors(AuthenticateUserMiddleware));
+router.use('/', AuthenticateUserMiddleware);
 router.get('/profile', catchAsyncErrors(ProfileController.getProfile));
 router.patch('/profile', catchAsyncErrors(ProfileController.editProfile));
 router.get('/nearby', catchAsyncErrors(ProfileController.getNearbyUsers));

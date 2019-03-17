@@ -23,14 +23,4 @@ exports.formatErrorExpress = function ({ location, msg, param, value, nestedErro
 
 
 
-exports.catchAsyncErrors = function (fn) {
-    return (req, res, next) => {
-        const routePromise = fn(req, res, next);
-        if (routePromise.catch) {
-            routePromise.catch(err => {
-                console.log('async error', err)
-                next(err)
-            });
-        }
-    }
-}
+exports.catchAsyncErrors = fn => (...args) => fn(...args).catch(args[2])

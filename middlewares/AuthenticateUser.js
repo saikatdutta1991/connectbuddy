@@ -6,7 +6,6 @@
 const JWT = require('../helpers/JWT');
 const { createResponse } = require('../helpers/Api');
 const User = require('../models/User');
-const ApplicationError = require('../helpers/ApplicationError');
 
 module.exports = async (req, res, next) => {
 
