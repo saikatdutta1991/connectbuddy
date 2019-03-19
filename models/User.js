@@ -119,12 +119,19 @@ userSchema.statics.uploadImage = (req, res) => {
 
 
 /** generating image url */
-userSchema.virtual('image_url').get(function () {
+userSchema.virtual('image_url').get(() => {
     if (!this.image_path) {
         return process.env.DEFAULT_USER_IMAGE_URL;
     }
     return `${process.env.BASE_URL}/${this.image_path.replace('public/', '')}`
-})
+});
+
+userSchema.statics.getImageurl = user => {
+    if (!user.image_path) {
+        return process.env.DEFAULT_USER_IMAGE_URL;
+    }
+    return `${process.env.BASE_URL}/${user.image_path.replace('public/', '')}`
+}
 
 
 const User = mongoose.model('User', userSchema);

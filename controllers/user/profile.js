@@ -20,6 +20,11 @@ module.exports.getNearbyUsers = async (req, res, next) => {
         }
     ]).match({ _id: { $ne: req.auth_user._id } });
 
+    users = users.map(user => {
+        user['image_url'] = User.getImageurl(user);
+        return user;
+    })
+
     res.json(createResponse(true, 'nearby_users', 'Nearby users', users))
 }
 
