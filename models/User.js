@@ -119,7 +119,7 @@ userSchema.statics.uploadImage = (req, res) => {
 
 
 /** generating image url */
-userSchema.virtual('image_url').get(() => {
+userSchema.virtual('image_url').get(function () {
     if (!this.image_path) {
         return process.env.DEFAULT_USER_IMAGE_URL;
     }
