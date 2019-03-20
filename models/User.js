@@ -36,6 +36,10 @@ var userSchema = new Schema({
         type: String,
         default: ''
     },
+    image_base64: {
+        type: String,
+        default: ''
+    },
     friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 
 });
@@ -77,6 +81,7 @@ userSchema.methods.toJSON = function () {
     var obj = this.toObject();
     delete obj.password;
     delete obj.image_path;
+    delete obj.image_base64;
     return obj;
 }
 
@@ -120,17 +125,17 @@ userSchema.statics.uploadImage = (req, res) => {
 
 /** generating image url */
 userSchema.virtual('image_url').get(function () {
-    if (!this.image_path) {
+    if (!this.image_base64) {
         return process.env.DEFAULT_USER_IMAGE_URL;
     }
-    return `${process.env.BASE_URL}/${this.image_path.replace('public/', '')}`
+    return this.image_base64;
 });
 
 userSchema.statics.getImageurl = user => {
-    if (!user.image_path) {
+    if (!user.image_base64) {
         return process.env.DEFAULT_USER_IMAGE_URL;
     }
-    return `${process.env.BASE_URL}/${user.image_path.replace('public/', '')}`
+    return this.image_base64;
 }
 
 

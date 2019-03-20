@@ -44,6 +44,7 @@ module.exports.editProfile = async (req, res, next) => {
         return res.json(createResponse(false, 'v_error', 'Some input fields are not valid', errors.formatWith(formatErrorExpress).mapped()));
     }
 
+
     /** store fields that are requied to update */
     let updateObject = {};
 
@@ -65,11 +66,17 @@ module.exports.editProfile = async (req, res, next) => {
         }
     }
 
+    if (req.body.image_base64) {
+        updateObject.image_base64 = req.body.image_base64;
+    }
 
+
+    /*
+    now only using base63 image for profile picture
     let file = await User.uploadImage(req, res).catch(err => { })
     if (file) {
         updateObject.image_path = file.path;
-    }
+    }*/
 
     /** update user data */
     await User.updateOne({ _id: req.auth_user._id }, updateObject);

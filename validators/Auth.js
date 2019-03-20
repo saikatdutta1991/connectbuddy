@@ -1,5 +1,5 @@
 const UserModel = require('../models/User');
-
+const isBase64 = require('is-base64');
 
 
 /**
@@ -9,6 +9,11 @@ module.exports.userProfileUpdate = async req => {
 
     /**check for name */
     req.checkBody('name').optional().isLength({ min: 3, max: 100 }).withMessage('Name must between 3-100 characters')
+
+    /** check user base64 image */
+    req.checkBody('image_base64', 'Image base64 is invalid').optional().custom(value => {
+        return isBase64(value, { mime: true });
+    });
 
     /** check for new password */
     req.checkBody('new_password').optional().isLength({ min: 6, max: 100 }).withMessage('Password must between 6-100 characters')
