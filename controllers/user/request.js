@@ -66,8 +66,8 @@ module.exports.getFriendRequests = async (req, res) => {
         .find({
             $or: [{ from_user: req.auth_user._id }, { to_user: req.auth_user.id }]
         })
-        .populate('from_user', '_id name')
-        .populate('to_user', '_id name')
+        .populate('from_user', '_id name image_base64')
+        .populate('to_user', '_id name image_base64')
         .sort({ createdAt: -1 });
 
     res.json(createResponse(true, 'requests', 'Requests fetched', freindRequests))
