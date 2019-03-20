@@ -135,7 +135,7 @@ userSchema.statics.getImageurl = user => {
     if (!user.image_base64) {
         return process.env.DEFAULT_USER_IMAGE_URL;
     }
-    return this.image_base64;
+    return user.image_base64;
 }
 
 
