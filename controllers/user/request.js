@@ -64,7 +64,8 @@ module.exports.getFriendRequests = async (req, res) => {
 
     let freindRequests = await FriendRequest
         .find({
-            $or: [{ from_user: req.auth_user._id }, { to_user: req.auth_user.id }]
+            $or: [{ from_user: req.auth_user._id }, { to_user: req.auth_user.id }],
+            $and: [{ status: FriendRequest.REQUESTED }]
         })
         .populate('from_user', '_id name image_base64')
         .populate('to_user', '_id name image_base64')
