@@ -13,7 +13,8 @@ const socketIO = require('../../socketio/SocketIO');
 module.exports.getFriends = async (req, res) => {
 
     let user = await User.findOne({ _id: req.auth_user._id })
-        .populate('friends', '_id, name, email, image_base64');
+        .populate('friends', '_id name email image_base64')
+        .sort({ createdAt: -1 });
 
     res.json(createResponse(true, 'requests', 'Requests fetched', { friends: user.friends }))
 
