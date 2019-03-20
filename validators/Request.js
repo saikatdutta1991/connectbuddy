@@ -68,6 +68,15 @@ module.exports.sendRequestValidator = async (req, data) => {
             return Promise.reject();
         }
     })
+    
+    /** check request has been sent by the other user or not */
+    req.checkBody('userid', 'You have been requested already').custom(async userid => {
+        let friendRequest = await FriendRequest.findOne({ from_user: userid, to_user: req.auth_user._id });
+        if (friendRequest) {
+            return Promise.reject();
+        }
+    })
+    
 
     return req.getValidationResult();
 
