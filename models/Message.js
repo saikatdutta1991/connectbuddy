@@ -17,6 +17,25 @@ var messageSchema = new Schema({
 
 
 
+/**
+ * fetch last messagae 
+ */
+messageSchema.statics.getLastMessage = async (userid, friendid) => {
+
+    let lastmessage = await Message.findOne({
+        $and: [{
+            $or: [{ from_user: userid }, { to_user: userid }],
+            $or: [{ to_user: friendid }, { from_user: friendid }],
+        }]
+    })
+        .lean()
+        .sort({ createdAt: -1 });
+
+    return lastmessage;
+}
+
+
+
 const Message = mongoose.model('Message', messageSchema);
 
 module.exports = Message;

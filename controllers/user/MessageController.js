@@ -14,8 +14,7 @@ module.exports.getMessages = async (req, res, next) => {
             $or: [{ from_user: req.auth_user._id }, { to_user: req.auth_user.id }],
             $or: [{ to_user: req.params.friendid }, { from_user: req.params.friendid }],
         }]
-    })
-        .sort({ createdAt: -1 });
+    }).lean();
 
 
     res.json(createResponse(true, 'messages', 'Messages fetched', messages));

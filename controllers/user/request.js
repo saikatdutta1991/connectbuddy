@@ -3,6 +3,7 @@ const User = require('../../models/User');
 const FriendRequest = require('../../models/FriendRequest');
 const { sendRequestValidator, cancelRequestValidator, rejectRequestValidator } = require('../../validators/Request');
 const socketIO = require('../../socketio/SocketIO');
+const Message = require('../../models/Message');
 
 
 
@@ -12,11 +13,23 @@ const socketIO = require('../../socketio/SocketIO');
  */
 module.exports.getFriends = async (req, res) => {
 
-    let user = await User.findOne({ _id: req.auth_user._id })
-        .populate('friends', '_id name email image_base64')
-        .sort({ createdAt: -1 });
+    let friendIds = req.auth_user.friends;
+    let friends = await User.find({ '_id': { $in: friendIds } })
+        .sort({ createdAt: -1 })
+        .select('_id name email image_base64')
+        .lean();
 
-    res.json(createResponse(true, 'requests', 'Requests fetched', { friends: user.friends }))
+    let promises = friends.map(async friend => {
+        friend['image_url'] = User.getImageurl(user);
+        friend['last_message'] = await Message.getLastMessage(req.auth_user._id, friend._id);
+        delete friend.image_base64;
+        return friend;
+    });
+
+    // Wait for all Promises to complete
+    friends = await Promise.all(promises);
+
+    res.json(createResponse(true, 'requests', 'Requests fetched', { friends: friends }))
 
 }
 
