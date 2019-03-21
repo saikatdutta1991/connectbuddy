@@ -4,6 +4,7 @@ const AuthenticateUserMiddleware = require('../middlewares/AuthenticateUser');
 const AuthController = require('../controllers/user/auth');
 const ProfileController = require('../controllers/user/profile');
 const RequestController = require('../controllers/user/request');
+const MessageController = require('../controllers/user/MessageController');
 
 router.post('/register', catchAsyncErrors(AuthController.doRegister));
 router.post('/login', catchAsyncErrors(AuthController.doLogin));
@@ -20,5 +21,6 @@ router.post('/requests/cancel', catchAsyncErrors(RequestController.cancelFriendR
 router.post('/requests/reject', catchAsyncErrors(RequestController.rejectFriendRequest));
 router.post('/requests/accept', catchAsyncErrors(RequestController.acceptFriendRequest));
 router.get('/friends', catchAsyncErrors(RequestController.getFriends));
+router.get('/friends/:friendid/messages', catchAsyncErrors(MessageController.getMessages));
 
 module.exports = router;

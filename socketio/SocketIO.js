@@ -1,9 +1,9 @@
 const socketio = require('socket.io');
 const io = socketio();
-const User = require('../models/User');
+const Message = require('../models/Message');
 const messageStorage = require('./MessageStorage');
 
-io.on('connection', socket => {
+io.on('connection', async socket => {
 
     console.log(`A user connected ${socket.id}`);
 
@@ -18,6 +18,41 @@ io.on('connection', socket => {
     let socketRoom = `${socket.type}_${socket.userid}`;
     socket.join(socketRoom);
     console.log('user joined to room : ' + socketRoom);
+
+
+
+
+    /**
+     * when user connects to server, 
+     * send all his friends online event
+     */
+    let friendids = await Helper.getFriendIds(socket.userid);
+    friendids.forEach(friendid => {
+
+        /** check friend is online
+         * if online send online event
+         * else store online event message for later use
+         */
+        let friendRoom = `user_${friendid}`;
+        if (Helper.isEmptyRoom(friendRoom)) {
+
+            /** store message to friendRoom */
+            messageStorage.pushMessage(friendRoom, {
+                event: 'friend_online',
+                data: socket.userid
+            });
+
+        } else {
+
+            /**emit message to friend that  */
+            io.sockets.in(friendRoom).emit('friend_online', socket.userid);
+        }
+
+    });
+
+
+
+
 
 
 
@@ -51,7 +86,56 @@ io.on('connection', socket => {
         let updateObject = { location: { coordinates: [parseFloat(data.longitude), parseFloat(data.latitude)] } };
         await User.updateOne({ _id: socket.userid }, updateObject);
         console.log('update_user_location', updateObject);
-    })
+    });
+
+
+
+
+    /**
+     * send new message to user
+     * if user is not connected to server store that message in messagestorage
+     * and emit it later when user connets again
+     */
+    socket.on('send_new_message', async data => {
+
+        /** save message to database */
+        let message = new Message({
+            from_user: socket.userid,
+            to_user: data.to_user,
+            message: data.message ? data.message : ''
+        });
+
+        try {
+            message = await message.save();
+        } catch (error) {
+            return;
+        }
+
+
+        /** check to_user is connected to server room user_{userid}
+         * if room is empty then store the message for later
+         * else send message to user
+        */
+        let userRoom = `user_${data.to_user}`;
+        if (Helper.isEmptyRoom(userRoom)) {
+
+            /** store message to other user room */
+            messageStorage.pushMessage(userRoom, {
+                event: 'new_mesaage_received',
+                data: message
+            });
+
+        } else {
+
+            /**emit message to intened user */
+            io.sockets.in(userRoom).emit('new_mesaage_received', message);
+        }
+
+        /** always send message back to user who is sending the message */
+        io.sockets.in(socketRoom).emit('new_message_sent', message);
+
+    });
+
 
 
 
@@ -62,9 +146,42 @@ io.on('connection', socket => {
      * when user disconnect from server
      * remove user from room that joined
      */
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
         console.log('user leave room : ' + socketRoom)
         socket.leave(socketRoom);
+
+
+        /**
+         * send all his friends that current user went offline
+         */
+        let friendids = await Helper.getFriendIds(socket.userid);
+        friendids.forEach(friendid => {
+
+            /** check friend is online
+             * if online send online event
+             * else store online event message for later use
+             */
+            let friendRoom = `user_${friendid}`;
+            if (Helper.isEmptyRoom(friendRoom)) {
+
+                /** store message to friendRoom */
+                messageStorage.pushMessage(friendRoom, {
+                    event: 'friend_offline',
+                    data: socket.userid
+                });
+
+            } else {
+
+                /**emit message to friend that  */
+                io.sockets.in(friendRoom).emit('friend_offline', socket.userid);
+            }
+
+        });
+
+
+
+
+
     })
 
 });
