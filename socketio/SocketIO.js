@@ -2,6 +2,7 @@ const socketio = require('socket.io');
 const io = socketio();
 const Message = require('../models/Message');
 const messageStorage = require('./MessageStorage');
+const User = require('../models/User');
 
 io.on('connection', async socket => {
 
@@ -27,29 +28,7 @@ io.on('connection', async socket => {
      * send all his friends online event
      */
     let friendids = await Helper.getFriendIds(socket.userid);
-    friendids.forEach(friendid => {
-
-        /** check friend is online
-         * if online send online event
-         * else store online event message for later use
-         */
-        let friendRoom = `user_${friendid}`;
-        if (Helper.isEmptyRoom(friendRoom)) {
-
-            /** store message to friendRoom */
-            messageStorage.pushMessage(friendRoom, {
-                event: 'friend_online',
-                data: socket.userid
-            });
-
-        } else {
-
-            /**emit message to friend that  */
-            io.sockets.in(friendRoom).emit('friend_online', socket.userid);
-        }
-
-    });
-
+    Helper.sendEventTousers(friendids, 'friend_online', socket.userid);
 
 
 
@@ -86,6 +65,14 @@ io.on('connection', async socket => {
         let updateObject = { location: { coordinates: [parseFloat(data.longitude), parseFloat(data.latitude)] } };
         await User.updateOne({ _id: socket.userid }, updateObject);
         console.log('update_user_location', updateObject);
+
+        /**
+         * send upated location to friends
+         */
+        let friendids = await Helper.getFriendIds(socket.userid);
+        data.userid = socket.userid;
+        Helper.sendEventTousers(friendids, 'friend_updated_location', data);
+
     });
 
 
@@ -155,31 +142,7 @@ io.on('connection', async socket => {
          * send all his friends that current user went offline
          */
         let friendids = await Helper.getFriendIds(socket.userid);
-        friendids.forEach(friendid => {
-
-            /** check friend is online
-             * if online send online event
-             * else store online event message for later use
-             */
-            let friendRoom = `user_${friendid}`;
-            if (Helper.isEmptyRoom(friendRoom)) {
-
-                /** store message to friendRoom */
-                messageStorage.pushMessage(friendRoom, {
-                    event: 'friend_offline',
-                    data: socket.userid
-                });
-
-            } else {
-
-                /**emit message to friend that  */
-                io.sockets.in(friendRoom).emit('friend_offline', socket.userid);
-            }
-
-        });
-
-
-
+        Helper.sendEventTousers(friendids, 'friend_offline', socket.userid);
 
 
     })

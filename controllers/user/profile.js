@@ -1,6 +1,7 @@
 const { createResponse, formatErrorExpress } = require('../../helpers/Api');
 const { userProfileUpdate } = require('../../validators/Auth');
 const User = require('../../models/User');
+const SocketIoHelper = require('../../socketio/Helper');
 
 
 /**
@@ -82,6 +83,15 @@ module.exports.editProfile = async (req, res, next) => {
     await User.updateOne({ _id: req.auth_user._id }, updateObject);
     let updatedUser = await User.findOne({ _id: req.auth_user._id });
 
+
+    if (req.body.latitude && req.body.longitude) {
+        /** send updated location to friends */
+        SocketIoHelper.sendEventTousers(updatedUser.friends, 'friend_updated_location', {
+            latitude: req.body.longitude,
+            longitude: req.body.longitude,
+            userid: updatedUser._id
+        });
+    }
 
 
 
