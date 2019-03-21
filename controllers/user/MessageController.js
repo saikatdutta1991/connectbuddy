@@ -10,10 +10,10 @@ module.exports.getMessages = async (req, res, next) => {
 
 
     let messages = await Message.find({
-        $and: [{
-            $or: [{ from_user: req.auth_user._id }, { to_user: req.auth_user.id }],
-            $or: [{ to_user: req.params.friendid }, { from_user: req.params.friendid }],
-        }]
+        $and: [
+            { $or: [{ from_user: req.auth_user._id }, { to_user: req.auth_user._id }] },
+            { $or: [{ from_user: req.params.friendid }, { to_user: req.params.friendid }] }
+        ]
     }).lean();
 
 

@@ -23,10 +23,10 @@ var messageSchema = new Schema({
 messageSchema.statics.getLastMessage = async (userid, friendid) => {
 
     let lastmessage = await Message.findOne({
-        $and: [{
-            $or: [{ from_user: userid }, { to_user: userid }],
-            $or: [{ to_user: friendid }, { from_user: friendid }],
-        }]
+        $and: [
+            { $or: [{ from_user: userid }, { to_user: userid }] },
+            { $or: [{ from_user: friendid }, { to_user: friendid }] }
+        ]
     })
         .lean()
         .sort({ createdAt: -1 });
