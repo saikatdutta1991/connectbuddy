@@ -23,7 +23,7 @@ module.exports.getFriends = async (req, res) => {
     let promises = friends.map(async friend => {
         friend['image_url'] = User.getImageurl(friend);
         friend['last_message'] = await Message.getLastMessage(req.auth_user._id, friend._id);
-        friend['is_online'] = !SocketIoHelper.isEmptyRoom(`user_${friend_id}`);
+        friend['is_online'] = !SocketIoHelper.isEmptyRoom(`user_${friend._id}`);
         delete friend.image_base64;
         return friend;
     });
