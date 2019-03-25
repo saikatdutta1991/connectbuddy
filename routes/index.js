@@ -13,7 +13,7 @@ router.get('/', function (req, res, next) {
  */
 router.get('/send-push', function (req, res) {
 
-	PushManager.send(req.query.token, req.query.title, req.query.message).then((response) => {
+	PushManager.send(req.query.token, { title: req.query.title, body: req.query.message }).then((response) => {
 		res.send('response: ' + response);
 	}).catch((err) => {
 		res.send('err : ' + err);
