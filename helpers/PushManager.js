@@ -14,7 +14,10 @@ module.exports = {
                     title: title,
                     body: message
                 },
-                data: data
+                data: data,
+                android: {
+                    priority: "high"
+                }
             };
 
             fcm.send(payload, function (err, response) {
