@@ -7,6 +7,5 @@ module.exports = function (err, req, res, next) {
         return res.json(Api.createResponse(false, err.type, err.message, err.data))
     }
 
-    console.log('unknown error', err)
     return res.json(Api.unknownerror())
 }
