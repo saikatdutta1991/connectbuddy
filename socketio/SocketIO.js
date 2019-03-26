@@ -85,9 +85,13 @@ io.on('connection', async socket => {
      */
     socket.on('send_new_message', async data => {
 
+        /** fetch from user and to user */
+        let fromUser = await User.findOne({ _id: socket.userid });
+
+
         /** save message to database */
         let message = new Message({
-            from_user: socket.userid,
+            from_user: fromUser._id,
             to_user: data.to_user,
             message: data.message ? data.message : ''
         });
@@ -111,6 +115,10 @@ io.on('connection', async socket => {
                 event: 'new_mesaage_received',
                 data: message
             });
+
+
+            /** send push notification to to_user */
+            User.sendPushNotification(data.to_user, 'new_mesaage_received', fromUser.name, 'New message', data.message);
 
         } else {
 

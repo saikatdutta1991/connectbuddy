@@ -6,6 +6,8 @@ const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const path = require('path');
 const ApplicationError = require('../helpers/ApplicationError');
+const DeviceToken = require('../models/DeviceToken');
+const PushManager = require('../helpers/PushManager');
 
 var userSchema = new Schema({
     name: {
@@ -137,6 +139,26 @@ userSchema.statics.getImageurl = user => {
     }
     return user.image_base64;
 }
+
+
+/**
+ * send push notifications
+ */
+userSchema.statics.sendPushNotification = async function (userid, type, title, subtitle, body) {
+    let tokens = await DeviceToken.getDeviceTokens(userid);
+
+    tokens.forEach(token => {
+        PushManager.send(token, {}, {
+            type: type,
+            title: title,
+            subtitle: subtitle,
+            body: body
+        }).then(response => { console.log(response) }).catch(err => { })
+    });
+}
+
+
+
 
 
 const User = mongoose.model('User', userSchema);
