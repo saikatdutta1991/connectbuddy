@@ -14,7 +14,7 @@ module.exports = {
                 android: {
                     priority: "high"
                 },
-                priority:10
+                priority: "high"
             };
 
             if (Object.keys(notification).length) {
