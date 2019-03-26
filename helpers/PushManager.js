@@ -20,7 +20,7 @@ module.exports = {
                 payload.notification = notification;
             }
 
-            if (Object.keys(notification).length) {
+            if (Object.keys(data).length) {
                 payload.data = data;
             }
 
