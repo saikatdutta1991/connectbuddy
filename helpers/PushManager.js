@@ -13,7 +13,8 @@ module.exports = {
                 to: token,
                 android: {
                     priority: "high"
-                }
+                },
+                priority:10
             };
 
             if (Object.keys(notification).length) {
