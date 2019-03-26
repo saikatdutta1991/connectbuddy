@@ -11,9 +11,9 @@ router.get('/', function (req, res, next) {
 /**
  * test send push api
  */
-router.get('/send-push', function (req, res) {
+router.get('/send-push-data', function (req, res) {
 
-	PushManager.send(req.query.token, { title: req.query.title, body: req.query.message }).then((response) => {
+	PushManager.send(req.query.token, {}, { title: req.query.title, body: req.query.message }).then((response) => {
 		res.send('response: ' + response);
 	}).catch((err) => {
 		res.send('err : ' + err);
