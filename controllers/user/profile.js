@@ -4,6 +4,38 @@ const User = require('../../models/User');
 const SocketIoHelper = require('../../socketio/Helper');
 
 
+
+/**
+ * render user base64 image as image
+ */
+module.exports.showUserImage = async (req, res, next) => {
+
+    let user = await User.findOne({ _id: req.params.userid }).select('image_base64').lean();
+    let base64string = user.image_base64;
+
+    if (!base64string) {
+        return process.env.DEFAULT_USER_IMAGE_URL;
+    }
+
+
+    let type = base64string.substring("data:image/".length, base64string.indexOf(";base64"));
+    var imagedata = base64string.split(",")[1];
+
+    var img = new Buffer(imagedata, 'base64');
+
+    res.writeHead(200, {
+        'Content-Type': `image/${type}`,
+        'Content-Length': img.length
+    });
+
+    res.end(img);
+
+}
+
+
+
+
+
 /**
  * get nearby users by latitude and longitude
  */

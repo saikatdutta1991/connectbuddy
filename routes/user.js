@@ -11,6 +11,10 @@ router.post('/register', catchAsyncErrors(AuthController.doRegister));
 router.post('/login', catchAsyncErrors(AuthController.doLogin));
 
 
+/** send user base64 image as binary image stream */
+router.get('/:userid/image', catchAsyncErrors(ProfileController.showUserImage));
+
+
 /** authenticated routes */
 router.use('/', AuthenticateUserMiddleware);
 router.get('/profile', catchAsyncErrors(ProfileController.getProfile));
