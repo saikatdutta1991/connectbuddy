@@ -144,7 +144,7 @@ userSchema.statics.getImageurl = user => {
 /**
  * send push notifications
  */
-userSchema.statics.sendPushNotification = async function (userid, type, title, subtitle, body) {
+userSchema.statics.sendPushNotification = async function (userid, type, title, subtitle, body, extra = {}) {
     let tokens = await DeviceToken.getDeviceTokens(userid);
 
     tokens.forEach(token => {
@@ -152,7 +152,8 @@ userSchema.statics.sendPushNotification = async function (userid, type, title, s
             type: type,
             title: title,
             subtitle: subtitle,
-            body: body
+            body: body,
+            extra: extra
         }).then(response => { console.log(response) }).catch(err => { })
     });
 }

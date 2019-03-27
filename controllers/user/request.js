@@ -64,6 +64,11 @@ module.exports.acceptFriendRequest = async (req, res) => {
         fromUser: req.auth_user
     });
 
+    /** send push notification to to_user */
+    User.sendPushNotification(req.body.userid, 'friend_request_accepted', req.auth_user.name, 'Friend Request Accepted', `${req.auth_user.name} has accepted your friend request. Say hi to your friend.`, {
+        from_user_id: req.auth_user._id
+    });
+
 
     let response = createResponse(true, 'friend_request_accepted', 'Friend request accepted successfully');
     return res.json(response);
@@ -118,6 +123,14 @@ module.exports.rejectFriendRequest = async (req, res, next) => {
         friendRequest: data.friendRequest
     });
 
+    /** send push notification to to_user */
+    User.sendPushNotification(req.body.userid, 'friend_request_rejected', req.auth_user.name, 'Friend Request Rejected', `${req.auth_user.name} has rejected your friend request. Don't be sad :).`, {
+        from_user_id: req.auth_user._id
+    });
+
+
+
+
 
     let response = createResponse(true, 'friend_request_rejected', 'Friend request rejected successfully', {
         friendRequest: data.friendRequest
@@ -145,12 +158,6 @@ module.exports.cancelFriendRequest = async (req, res, next) => {
     /** delete frined request */
     await FriendRequest.deleteOne({ _id: data.friendRequest._id })
 
-
-    /** send event to other user that new friend request canceled */
-    socketIO.sockets.in(`user_${req.body.userid}`).emit('friend_request_canceled', {
-        fromUser: req.auth_user,
-        friendRequest: data.friendRequest
-    });
 
     let response = createResponse(true, 'friend_request_canceled', 'Friend request canceled successfully', {
         friendRequest: data.friendRequest
@@ -188,6 +195,12 @@ module.exports.sendFriendRequest = async (req, res, next) => {
     socketIO.sockets.in(`user_${req.body.userid}`).emit('new_friend_request', {
         fromUser: req.auth_user,
         friendRequest: friendRequest
+    });
+
+
+    /** send push notification to to_user */
+    User.sendPushNotification(req.body.userid, 'new_friend_request', req.auth_user.name, 'New Friend Request', `${req.auth_user.name} has sent you friend request. Accept your friend and start chatting with him. :) :).`, {
+        from_user_id: req.auth_user._id
     });
 
 

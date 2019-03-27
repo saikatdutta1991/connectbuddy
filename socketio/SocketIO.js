@@ -118,7 +118,7 @@ io.on('connection', async socket => {
 
 
             /** send push notification to to_user */
-            User.sendPushNotification(data.to_user, 'new_mesaage_received', fromUser.name, 'New message', data.message);
+            User.sendPushNotification(data.to_user, 'new_mesaage_received', fromUser.name, 'New message', data.message, message);
 
         } else {
 
