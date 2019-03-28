@@ -7,7 +7,7 @@ connects nearby buddies through map
 APP_NAME=ConnectBody
 PORT=80
 BASE_URL=http://localhost
-DEFAULT_USER_IMAGE_URL=http://www.murketing.com/journal/wp-content/uploads/2009/04/nopic_192.gif
+DEFAULT_USER_IMAGE_URL=http://localhost/images/default_face.gif
 MONGO_HOST=
 MONGO_PORT=27017
 MONGO_USER=root

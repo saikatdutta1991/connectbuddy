@@ -2,7 +2,8 @@ const { createResponse, formatErrorExpress } = require('../../helpers/Api');
 const { userProfileUpdate } = require('../../validators/Auth');
 const User = require('../../models/User');
 const SocketIoHelper = require('../../socketio/Helper');
-
+const fs = require('fs');
+const path = require('path');
 
 
 /**
@@ -14,7 +15,11 @@ module.exports.showUserImage = async (req, res, next) => {
     let base64string = user.image_base64;
 
     if (!base64string) {
-        return process.env.DEFAULT_USER_IMAGE_URL;
+
+        var img = fs.readFileSync(path.join(__dirname, '/../../public/images/default_face.gif'));
+        res.writeHead(200, { 'Content-Type': 'image/gif' });
+        res.end(img, 'binary');
+        return;
     }
 
 
