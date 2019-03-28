@@ -86,7 +86,7 @@ io.on('connection', async socket => {
     socket.on('send_new_message', async data => {
 
         /** fetch from user and to user */
-        let fromUser = await User.findOne({ _id: socket.userid }).lean();
+        let fromUser = await User.findOne({ _id: socket.userid }).lean().exec();
 
 
         /** save message to database */
