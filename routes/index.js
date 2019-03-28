@@ -7,4 +7,10 @@ router.get('/', function (req, res, next) {
 });
 
 
+/** GET aobut us page */
+router.get('/about-us', function (req, res, next) {
+	res.render('about-us', { title: process.env.APP_NAME });
+});
+
+
 module.exports = router;
