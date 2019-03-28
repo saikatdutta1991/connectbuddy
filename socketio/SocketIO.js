@@ -123,7 +123,8 @@ io.on('connection', async socket => {
         } else {
 
             /**emit message to intened user */
-            message.from_user_name = fromUser.name;
+            message = message.toObject();
+            message[from_user_name] = fromUser.name;
             io.sockets.in(userRoom).emit('new_mesaage_received', message);
         }
 
