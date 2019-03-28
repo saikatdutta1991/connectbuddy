@@ -124,7 +124,7 @@ io.on('connection', async socket => {
 
             /**emit message to intened user */
             message = message.toObject();
-            message[from_user_name] = fromUser.name;
+            message.from_user_name = fromUser.name;
             io.sockets.in(userRoom).emit('new_mesaage_received', message);
         }
 
