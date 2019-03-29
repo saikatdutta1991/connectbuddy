@@ -50,6 +50,7 @@ var userSchema = new Schema({
 userSchema.set('toObject', { virtuals: true });
 userSchema.set('toJSON', { virtuals: true });
 userSchema.index({ location: '2dsphere' });
+userSchema.index({ name: 'text', email: 'text' });
 
 
 /** verify password */

@@ -6,6 +6,31 @@ const fs = require('fs');
 const path = require('path');
 
 
+
+/** 
+ * search any users by name email
+ */
+module.exports.searchUsers = async function (req, res) {
+
+    let queryString = req.query.q ? req.query.q : '';
+
+    let users = await User.find({
+        _id: { $ne: req.auth_user._id },
+        $text: { $search: queryString }
+    }, { score: { $meta: "textScore" } })
+        .sort({ score: { $meta: "textScore" } })
+        .select('name email image_base64')
+        .limit(50)
+        .exec();
+
+    res.json(createResponse(true, 'users', 'users', users))
+}
+
+
+
+
+
+
 /**
  * render user base64 image as image
  */

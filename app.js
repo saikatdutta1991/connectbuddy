@@ -42,7 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /** registering routes */
 var indexRouter = require('./routes/index');
-const userRouter = require('./routes/user');
+var userRouter = require('./routes/user');
 app.use('/', indexRouter);
 app.use('/api/v1/user', userRouter);
 /** registering routes end*/

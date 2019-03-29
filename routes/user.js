@@ -1,4 +1,4 @@
-const router = require('express').Router();
+var router = require('express').Router();
 const { catchAsyncErrors } = require('../helpers/Api');
 const AuthenticateUserMiddleware = require('../middlewares/AuthenticateUser');
 const AuthController = require('../controllers/user/auth');
@@ -28,5 +28,6 @@ router.post('/requests/accept', catchAsyncErrors(RequestController.acceptFriendR
 router.get('/friends', catchAsyncErrors(RequestController.getFriends));
 router.get('/friends/:friendid/messages', catchAsyncErrors(MessageController.getMessages));
 router.patch('/fcm/token', catchAsyncErrors(FcmController.addFcmToken));
+router.get('/search', catchAsyncErrors(ProfileController.searchUsers)); /** search any users by name or email */
 
 module.exports = router;
