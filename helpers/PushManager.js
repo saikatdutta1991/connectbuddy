@@ -27,6 +27,8 @@ module.exports = {
 
             fcm.send(payload, function (err, response) {
 
+                console.log('fcm send ', err, response)
+
                 if (err) {
                     reject(err);
                     return;

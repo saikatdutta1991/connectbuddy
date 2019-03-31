@@ -146,7 +146,11 @@ userSchema.statics.getImageurl = user => {
  * send push notifications
  */
 userSchema.statics.sendPushNotification = async function (userid, type, title, subtitle, body, extra = {}) {
+
     let tokens = await DeviceToken.getDeviceTokens(userid);
+
+    console.log('User::sendPushNotification()');
+    console.log('User::sendPushNotification() device tokens : ', tokens);
 
     tokens.forEach(token => {
         PushManager.send(token, {}, {
