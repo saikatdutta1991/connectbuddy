@@ -75,7 +75,7 @@ userSchema.methods.getJwtToken = function () {
             _id: this._id,
             email: this.email
         }
-    }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    }, process.env.JWT_SECRET, { expiresIn: '1000d' });
 }
 
 
