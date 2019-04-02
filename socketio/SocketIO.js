@@ -204,7 +204,7 @@ io.on('connection', async socket => {
 
     socket.on('vc_exchange', async (data) => {
         let room = `${usertype}_${userid}`;
-        io.sockets.in(room).emit(data.type, data);
+        io.sockets.in(room).emit(data.mtype, data);
     });
 
 
