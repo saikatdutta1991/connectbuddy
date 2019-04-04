@@ -153,6 +153,7 @@ io.on('connection', async socket => {
         let calleeRoom = `user_${data.calleeId}`;
         let isCalleeConnected = !Helper.isEmptyRoom(calleeRoom);
         callback(isCalleeConnected);
+        console.log('connect_callee', calleeRoom, isCalleeConnected);
     });
 
     socket.on('send_vc', async (data) => {
