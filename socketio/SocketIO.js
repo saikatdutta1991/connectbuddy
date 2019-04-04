@@ -148,9 +148,9 @@ io.on('connection', async socket => {
 
         /** send push message to callee to open app if online */
         if (data.isPushmsgNeeded) {
-            User.sendPushNotification(calleeId, 'new_video_call', `${data.callerName}`, 'New Call', `${callerName} is calling you. Receive or reject the call.`);
+            User.sendPushNotification(data.calleeId, 'new_video_call', `${data.callerName}`, 'New Call', `${data.callerName} is calling you. Receive or reject the call.`);
         }
-
+        let calleeRoom = `user_${data.calleeId}`;
         let isCalleeConnected = !Helper.isEmptyRoom(calleeRoom);
         callback(isCalleeConnected);
     });
