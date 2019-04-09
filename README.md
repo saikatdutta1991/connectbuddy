@@ -1,8 +1,11 @@
 # connectbuddy
 connects nearby buddies through map
 
+### Demo App Apk
+[ConnectBuddy download here][testbuild]
 
-## env sample
+
+### env sample
 ```javascript
 APP_NAME=ConnectBody
 PORT=80
@@ -18,3 +21,4 @@ JWT_SECRET=testing
 FCM_SERVER_KEY=asdfhe983n3ndkd
 GOOGLE_USER_ANDROID_CLIENT_ID=************-56d0ejh1nm96dqiqgghgslfm9le1762d.apps.googleusercontent.com
 ```
+[testbuild]: https://github.com/saikatdutta1991/ReactNativeDemo/blob/master/screenshots/app-release.apk "ConnectBuddy"
