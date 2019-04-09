@@ -81,6 +81,21 @@ io.on('connection', async socket => {
 
 
 
+
+    /**
+     * send user is typing message
+     */
+    socket.on('typing', data => {
+        data.from_user = socket.userid;
+        let userRoom = `user_${data.to_user}`;
+        io.sockets.in(userRoom).emit('user_typing', data);
+    });
+
+
+
+
+
+
     /**
      * send new message to user
      * if user is not connected to server store that message in messagestorage
