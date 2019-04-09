@@ -7,6 +7,7 @@ const RequestController = require('../controllers/user/request');
 const MessageController = require('../controllers/user/MessageController');
 const FcmController = require('../controllers/user/FcmController');
 
+router.post('/auth/google', catchAsyncErrors(AuthController.doGoogleAuth));
 router.post('/register', catchAsyncErrors(AuthController.doRegister));
 router.post('/login', catchAsyncErrors(AuthController.doLogin));
 

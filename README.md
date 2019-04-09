@@ -16,4 +16,5 @@ MONGODB=
 MONGOSRV=true
 JWT_SECRET=testing
 FCM_SERVER_KEY=asdfhe983n3ndkd
+GOOGLE_USER_ANDROID_CLIENT_ID=************-56d0ejh1nm96dqiqgghgslfm9le1762d.apps.googleusercontent.com
 ```

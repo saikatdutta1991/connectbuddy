@@ -1,3 +1,6 @@
+const base64Img = require('base64-img');
+
+
 exports.unknownerror = function (error) {
     return this.createResponse(false, 'unkonwn_error', 'Unknown error. Try again')
 }
@@ -24,3 +27,18 @@ exports.formatErrorExpress = function ({ location, msg, param, value, nestedErro
 
 
 exports.catchAsyncErrors = fn => (...args) => fn(...args).catch(args[2])
+
+
+
+exports.imageUrlToBase64 = (picURL) => {
+    return new Promise((resolve, reject) => {
+
+        base64Img.requestBase64(picURL, function (err, res, body) {
+            if (err) {
+                return reject(err);
+            }
+            resolve(body);
+        });
+
+    });
+}

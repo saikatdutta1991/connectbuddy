@@ -6,6 +6,7 @@
     "start": "nodemon -r dotenv/config ./bin/www"
   },
   "dependencies": {
+    "base64-img": "^1.0.4",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cookie-parser": "~1.4.3",
@@ -14,6 +15,7 @@
     "express": "~4.16.0",
     "express-validator": "^5.3.1",
     "fcm-node": "^1.4.0",
+    "google-auth-library": "^3.1.2",
     "http-errors": "~1.6.2",
     "is-base64": "^0.1.0",
     "jsonwebtoken": "^8.5.0",

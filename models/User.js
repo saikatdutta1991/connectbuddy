@@ -10,6 +10,10 @@ const DeviceToken = require('../models/DeviceToken');
 const PushManager = require('../helpers/PushManager');
 
 var userSchema = new Schema({
+    google_account_id: {
+        type: String,
+        default: ''
+    },
     name: {
         type: String,
         required: [true, "User name is required"],
@@ -31,7 +35,7 @@ var userSchema = new Schema({
     },
     password: {
         type: String,
-        required: [true, 'Password is required']
+        default: ''
     },
 
     image_path: {
