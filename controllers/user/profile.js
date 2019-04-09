@@ -13,15 +13,27 @@ const path = require('path');
 module.exports.searchUsers = async function (req, res) {
 
     let queryString = req.query.q ? req.query.q : '';
+    let users = [];
+    if (!queryString) {
 
-    let users = await User.find({
-        _id: { $ne: req.auth_user._id },
-        $text: { $search: queryString }
-    }, { score: { $meta: "textScore" } })
-        .sort({ score: { $meta: "textScore" } })
-        .select('name email image_base64')
-        .limit(50)
-        .exec();
+        users = await User.find({ _id: { $ne: req.auth_user._id } })
+            .select('name email image_base64')
+            .limit(50)
+            .exec();
+
+    } else {
+
+        users = await User.find({
+            _id: { $ne: req.auth_user._id },
+            $text: { $search: queryString }
+        }, { score: { $meta: "textScore" } })
+            .sort({ score: { $meta: "textScore" } })
+            .select('name email image_base64')
+            .limit(50)
+            .exec();
+    }
+
+
 
     res.json(createResponse(true, 'users', 'users', users))
 }
